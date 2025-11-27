@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Product CRUD — Painel</title>
+
+  <style>
+    :root{
+      --bg:#f4f6f9;
+      --card:#ffffff;
+      --primary:#1976d2;
+      --accent:#26a69a;
+      --danger:#e53935;
+      --muted:#777;
+      --radius:10px;
+    }
+    *{box-sizing:border-box}
+    body{
+      font-family: Inter, Arial, sans-serif;
+      background:var(--bg);
+      margin:0;
+      padding:28px;
+      display:flex;
+      justify-content:center;
+    }
+    .wrap{
+      width:100%;
+      max-width:1100px;
+      display:grid;
+      grid-template-columns: 380px 1fr;
+      gap:20px;
+    }
+
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow: 0 6px 18px rgba(17,24,39,0.06);
+    }
+
+    h1{ margin:0 0 12px 0; font-size:20px; color:#111827; text-align:center; grid-column:1/-1 }
+    h2{ margin:0 0 10px 0; font-size:16px; color:#111827 }
+
+    label{ display:block; margin-top:10px; font-size:13px; color:#334155 }
+    input[type="text"], input[type="number"], textarea{
+      width:100%;
+      padding:10px 12px;
+      border-radius:8px;
+      border:1px solid #e6edf3;
+      margin-top:6px;
+      font-size:14px;
+      background: #fbfdff;
+    }
+    textarea{ resize:vertical; min-height:80px }
+
+    .btn{
+      display:inline-block;
+      padding:10px 12px;
+      border-radius:8px;
+      border:0;
+      color:white;
+      font-weight:600;
+      cursor:pointer;
+      margin-top:12px;
+    }
+    .btn-primary{ background:var(--primary) }
+    .btn-success{ background:var(--accent) }
+    .btn-danger{ background:var(--danger) }
+    .btn-ghost{ background:transparent; color:var(--primary); border:1px solid #dbeafe }
+
+    /* left column (forms) */
+    .left { display:flex; flex-direction:column; gap:14px; }
+
+    /* search area */
+    .search-row{ display:flex; gap:8px; align-items:center; }
+    .search-row input{ flex:1 }
+
+    /* products list */
+    .list-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:8px }
+    #products{ list-style:none; padding:0; margin:0; display:grid; gap:12px }
+    #products li{
+      display:flex; justify-content:space-between; gap:12px; align-items:flex-start;
+      padding:12px; border-radius:8px; background:linear-gradient(0deg,#fff,#fff);
+      border:1px solid #eef2f7;
+    }
+    .info{ flex:1; min-width:0 }
+    .info strong{ display:block; font-size:15px; color:#0f172a }
+    .info .desc{ color:var(--muted); font-size:13px; margin-top:6px }
+    .info .price{ color:#0b6b3f; font-weight:600; margin-top:8px }
+
+    .controls{ display:flex; gap:8px; align-items:center }
+    .small{ color:var(--muted); font-size:12px }
+
+    /* edit row */
+    .editRow{ margin-top:10px; display:flex; gap:8px; flex-wrap:wrap }
+    .editRow input{ width:180px }
+
+    @media (max-width:980px){
+      .wrap{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Painel de Produtos</h1>
+
+    <!-- LEFT: Formulários (Pesquisar, Criar, Atualizar via ID) -->
+    <div class="card left">
+      <!-- CONSULTAR -->
+      <div>
+        <h2>Consultar produto por ID</h2>
+        <div class="search-row">
+          <input id="searchId" type="number" placeholder="Digite o ID (ex: 5)">
+          <button id="btnSearch" class="btn btn-primary">Buscar</button>
+        </div>
+        <div id="searchResult" style="margin-top:10px"></div>
+      </div>
+
+      <!-- CRIAR -->
+      <div>
+        <h2>Cadastrar produto</h2>
+        <form id="add-product-form">
+          <label for="name">Nome</label>
+          <input id="name" type="text" required placeholder="Nome do produto">
+
+          <label for="description">Descrição</label>
+          <input id="description" type="text" required placeholder="Breve descrição">
+
+          <label for="price">Preço (R$)</label>
+          <input id="price" type="number" step="0.01" required placeholder="0.00">
+
+          <button type="submit" class="btn btn-success">Criar produto</button>
+        </form>
+      </div>
+
+      <!-- ATUALIZAR -->
+      <div>
+        <h2>Atualizar produto (por ID)</h2>
+
+        <label for="idUpdate">ID do produto</label>
+        <input id="idUpdate" type="number" placeholder="ID para atualizar">
+
+        <label for="nameUpdate">Nome</label>
+        <input id="nameUpdate" type="text" placeholder="Nome">
+
+        <label for="descriptionUpdate">Descrição</label>
+        <input id="descriptionUpdate" type="text" placeholder="Descrição">
+
+        <label for="priceUpdate">Preço</label>
+        <input id="priceUpdate" type="number" step="0.01" placeholder="Preço">
+
+        <button id="btnUpdate" class="btn btn-primary">Atualizar produto</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: Listagem -->
+    <div class="card">
+      <div class="list-header">
+        <h2>Todos os produtos</h2>
+        <button id="refreshBtn" class="btn btn-ghost">Atualizar lista</button>
+      </div>
+
+      <ul id="products"> <!-- itens preenchidos via JS --> </ul>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
